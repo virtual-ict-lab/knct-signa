@@ -93,11 +93,11 @@
 
 ### Task 5: 実運用の確認と文書
 
-**Files:** `README.md`と確認中に必要になった修正。
+**Files:** 動作確認中に必要になった修正。READMEはユーザーの許可があるまで変更しない。
 
 **Interfaces:** `bun run dev`, `bun run build`, `bun start`, `bun test`, `bun run typecheck`。
 
-- [ ] READMEに`.env`作成、起動、ビルド、URL、JSON保存、データソース設定、部内LAN公開、バックアップ方法を書く。
+- [ ] READMEを変更せず、起動方法は最終報告に記載する（ユーザーの追加指示）。
 - [ ] 一時設定と資格情報で本番サーバーを起動し、ブラウザーで両画面を表示する。
 - [ ] 設定保存からキオスク反映、複数タブの409、認証拒否、再接続、ソース失敗表示を確認する。
 - [ ] `bun test`, `bun run typecheck`, `bun run build`, `git diff --check`を実行する。

@@ -7,7 +7,7 @@
     "dev": "bun scripts/dev.ts",
     "start": "bun src/server/index.ts",
     "build": "bun --bun vite build",
-    "typecheck": "bun --bun vue-tsc --noEmit",
+    "typecheck": "bun scripts/typecheck.ts",
     "test": "bun test"
   },
   "engines": {
@@ -22,8 +22,9 @@
   "devDependencies": {
     "@types/bun": "^1.4.3",
     "@vitejs/plugin-vue": "^6.0.10",
+    "@volar/typescript": "2.4.28",
+    "@vue/language-core": "3.3.13",
     "typescript": "~6.0.3",
-    "vite": "^8.3.4",
-    "vue-tsc": "^3.3.13"
+    "vite": "^8.3.4"
   }
 }

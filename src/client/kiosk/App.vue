@@ -109,7 +109,6 @@ function shortTime(value: string | null | undefined) {
       </section>
     </main>
     <footer class="kiosk-ticker" aria-label="ニュース">
-      <span class="ticker-label">ニュース</span>
       <div class="ticker-window"><div v-if="ticker" class="ticker-content" :style="{ animationDuration: `${Math.max(30, ticker.length * .4)}s` }"><span>{{ ticker }}　　 /　　 </span><span aria-hidden="true">{{ ticker }}　　 /　　 </span></div><span v-else class="ticker-placeholder">{{ emptyMessage }}</span></div>
     </footer>
   </div>

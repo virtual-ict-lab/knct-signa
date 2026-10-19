@@ -1,7 +1,8 @@
+@import '@fontsource-variable/reddit-sans';
 @import '@fontsource-variable/noto-sans-jp';
 * { box-sizing: border-box; }
 :root {
-  font-family: "Noto Sans JP Variable", "Noto Sans JP", sans-serif;
+  font-family: "Reddit Sans Variable", "Reddit Sans", "Noto Sans JP Variable", "Noto Sans JP", sans-serif;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   color-scheme: dark;

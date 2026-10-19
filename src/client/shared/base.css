@@ -6,23 +6,23 @@
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   color-scheme: dark;
-  --background: #111111;
-  --surface: #1a1a1a;
-  --surface-raised: #222222;
-  --foreground: #f5f5f5;
+  --background: #262626;
+  --surface: #303030;
+  --surface-raised: #393939;
+  --foreground: #d6d6d6;
   --muted: #aaaaaa;
-  --border: #444444;
+  --border: #505050;
   color: var(--foreground);
   background: var(--background);
 }
 :root[data-theme='light'] {
   color-scheme: light;
-  --background: #ffffff;
-  --surface: #f6f6f6;
-  --surface-raised: #eeeeee;
-  --foreground: #111111;
+  --background: #e6e6e6;
+  --surface: #ededed;
+  --surface-raised: #dcdcdc;
+  --foreground: #3b3b3b;
   --muted: #666666;
-  --border: #cccccc;
+  --border: #c2c2c2;
 }
 body { margin: 0; }
 button, input, select, textarea { font: inherit; }

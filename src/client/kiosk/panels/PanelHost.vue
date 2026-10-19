@@ -11,7 +11,7 @@ onErrorCaptured(() => { failed.value = true; return false })
 </script>
 
 <template>
-  <section class="content-panel" :class="{ 'content-panel--full': panel.width === 'full', 'content-panel--news': panel.type === 'news' }" :aria-label="panel.title || undefined">
+  <section class="content-panel" :class="{ 'content-panel--full': panel.width === 'full' }" :aria-label="panel.title || undefined">
     <h2 v-if="panel.title" class="content-panel-title">{{ panel.title }}</h2>
     <component :is="component" v-if="component && !failed" :panel="panel" :settings="panel.settings" :context="context" />
     <div v-else class="kiosk-empty" role="status">{{ component ? '表示失敗' : 'パネルが見つかりません' }}</div>

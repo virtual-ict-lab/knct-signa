@@ -29,11 +29,11 @@ test('generates custom controls with saved values and validation constraints fro
 test('loads a discovered Vue component into the shared panel frame and escapes its text', async () => {
   const { default: Host } = await server.ssrLoadModule('/src/client/kiosk/panels/PanelHost.vue')
   const html = await renderToString(createSSRApp(Host, {
-    panel: { id: 'text-1', type: 'text', enabled: true, width: 'half', title: '予定', settings: { body: '<img src=x onerror=alert(1)>' } },
+    panel: { id: 'image-1', type: 'image', enabled: true, width: 'half', title: '予定 <img src=x onerror=alert(1)>', settings: { url: '', fit: 'contain' } },
     context: { states: [], timezone: 'Asia/Tokyo', rotationSeconds: 12 },
   }))
   expect(html).toContain('class="content-panel"')
-  expect(html).toContain('class="content-panel-title">予定</h2>')
+  expect(html).toContain('class="image-panel"')
   expect(html).toContain('&lt;img src=x onerror=alert(1)&gt;')
   expect(html).not.toContain('<img')
 })

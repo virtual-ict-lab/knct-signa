@@ -11,7 +11,7 @@ export interface Panel {
 }
 export const MAX_PANELS = 4
 export function defaultPanels(): Panel[] {
-  return [{ id: 'news', type: 'news', enabled: true, width: 'full', title: 'お知らせ', settings: {} }]
+  return []
 }
 export function createPanel(type: string): Panel {
   const definition = panelCatalog.find(panel => panel.id === type)

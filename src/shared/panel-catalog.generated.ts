@@ -50,23 +50,5 @@ export const panelCatalog = [
         ]
       }
     ]
-  },
-  {
-    "id": "news",
-    "name": "お知らせ",
-    "fields": []
-  },
-  {
-    "id": "text",
-    "name": "テキスト",
-    "fields": [
-      {
-        "key": "body",
-        "label": "本文",
-        "default": "",
-        "maxLength": 10000,
-        "type": "textarea"
-      }
-    ]
   }
 ] satisfies PanelDefinition[]

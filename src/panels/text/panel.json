@@ -1,7 +1,0 @@
-{
-  "id": "text",
-  "name": "テキスト",
-  "fields": [
-    { "key": "body", "label": "本文", "type": "textarea", "default": "", "maxLength": 10000 }
-  ]
-}

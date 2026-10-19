@@ -91,7 +91,7 @@ function shortTime(value: string | null | undefined) {
           <div class="weather-credit"><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">気象データ</a></div>
         </section>
       </aside>
-      <section class="updates-panel" aria-label="パネル">
+      <section class="panel-area" aria-label="パネル">
         <div v-if="panels.length" class="panel-grid">
           <PanelHost v-for="panel in panels" :key="panel.id" :panel="panel" :context="panelContext" />
         </div>

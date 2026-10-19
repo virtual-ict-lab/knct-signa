@@ -30,4 +30,4 @@ export const panelSchema = z.object({
 })
 export const panelsSchema = z.array(panelSchema).max(MAX_PANELS).refine(
   panels => new Set(panels.map(panel => panel.id)).size === panels.length, 'パネルのIDが重複しています',
-)
+).transform(panels => panels.filter(panel => panel.type !== 'news' && panel.type !== 'text'))

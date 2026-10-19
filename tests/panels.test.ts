@@ -8,7 +8,7 @@ import { publicConfig } from '../src/shared/display'
 import { createPanel } from '../src/shared/panels'
 import { fixture, authorization } from './helpers'
 
-test('loads legacy configuration with its existing news display without rewriting the file', async () => {
+test('loads legacy configuration without adding retired panels or rewriting the file', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'signa-panels-'))
   try {
     const path = join(dir, 'config.json')
@@ -17,14 +17,14 @@ test('loads legacy configuration with its existing news display without rewritin
     const raw = JSON.stringify(legacy)
     await writeFile(path, raw)
     const store = await ConfigStore.open(path)
-    expect(store.get().panels).toEqual([{ id: 'news', type: 'news', enabled: true, width: 'full', title: 'お知らせ', settings: {} }])
+    expect(store.get().panels).toEqual([])
     expect(await readFile(path, 'utf8')).toBe(raw)
     const saved = await store.update({ ...store.get(), panels: [
-      { id: 'welcome', type: 'text', enabled: true, width: 'half', title: '予定', settings: { body: '部会 16:00' } },
+      { id: 'meals', type: 'dorm-meals', enabled: true, width: 'half', title: '寮食', settings: { url: 'https://virtual-ict-lab.github.io/knct-ryoshoku-api/kondate.json', intervalSeconds: 600 } },
       { id: 'poster', type: 'image', enabled: false, width: 'half', title: '', settings: { url: '/assets/poster.png', fit: 'contain' } },
     ] })
     expect((await ConfigStore.open(path)).get().panels).toEqual(saved.panels)
-    expect(publicConfig(saved).panels.map(panel => panel.id)).toEqual(['welcome', 'poster'])
+    expect(publicConfig(saved).panels.map(panel => panel.id)).toEqual(['meals', 'poster'])
   } finally { await rm(dir, { recursive: true, force: true }) }
 })
 
@@ -40,8 +40,8 @@ test('rejects duplicate IDs, invalid sizes, excessive panels and unsafe image UR
 })
 
 test('creates independently editable panels with unique IDs', () => {
-  const first = createPanel('text')
-  const second = createPanel('text')
+  const first = createPanel('image')
+  const second = createPanel('image')
   expect(first.id).not.toBe(second.id)
   expect(configSchema.parse({ ...createDefaultConfig(), panels: [first, second] }).panels).toHaveLength(2)
   expect(createPanel('image')).toMatchObject({ type: 'image', settings: { url: '', fit: 'contain' } })
@@ -92,5 +92,30 @@ test('never persists settings that cannot be read back after defaults are added'
     const settings = Object.fromEntries(Array.from({ length: 32 }, (_, index) => [`old-${index}`, index]))
     await expect(store.update({ ...store.get(), panels: [{ id: 'meals', type: 'dorm-meals', title: '', enabled: true, width: 'full', settings }] })).rejects.toThrow()
     expect((await ConfigStore.open(join(dir, 'config.json'))).get().revision).toBe(0)
+  } finally { await rm(dir, { recursive: true, force: true }) }
+})
+
+
+test('retires saved news and text panels while preserving other windows and ticker sources', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'signa-retired-panels-'))
+  try {
+    const path = join(dir, 'config.json')
+    const config = { ...createDefaultConfig(), panels: [
+      { id: 'old-news', type: 'news', title: 'お知らせ', enabled: true, width: 'full', settings: {} },
+      { id: 'old-text', type: 'text', title: '連絡', enabled: true, width: 'half', settings: { body: '本文' } },
+      { id: 'poster', type: 'image', title: '掲示', enabled: true, width: 'half', settings: { url: '/assets/poster.png', fit: 'contain' } },
+    ], sources: [{ id: 'feed', type: 'rss', name: 'ニュース', url: 'https://example.com/feed', enabled: true, intervalSeconds: 300 }] }
+    const raw = JSON.stringify(config)
+    await writeFile(path, raw)
+    const store = await ConfigStore.open(path)
+    expect(store.get().panels.map(panel => panel.type)).toEqual(['image'])
+    expect(store.get().sources).toHaveLength(1)
+    expect(publicConfig(store.get()).panels.map(panel => panel.id)).toEqual(['poster'])
+    expect(await readFile(path, 'utf8')).toBe(raw)
+    const saved = await store.update(store.get())
+    expect(saved.panels).toHaveLength(1)
+    expect((await ConfigStore.open(path)).get().sources).toHaveLength(1)
+    expect(() => createPanel('news')).toThrow()
+    expect(() => createPanel('text')).toThrow()
   } finally { await rm(dir, { recursive: true, force: true }) }
 })

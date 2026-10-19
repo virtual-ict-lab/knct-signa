@@ -8,7 +8,7 @@ const meals = [{ key: 'breakfast', label: '朝食' }, { key: 'lunch', label: '�
 
 <template>
   <div class="meal-panel">
-    <div v-if="menu" class="meal-grid">
+    <div v-if="menu" class="meal-grid" tabindex="0" aria-label="寮食の献立">
       <section v-for="meal in meals" :key="meal.key" class="meal-section">
         <h3>{{ meal.label }}</h3>
         <ul v-if="menu[meal.key].length"><li v-for="(name, index) in menu[meal.key]" :key="index">{{ name }}</li></ul>

@@ -7,6 +7,8 @@ import { parseThemePreference, resolveTheme, type ThemePreference } from '../sha
 import { informationMessage } from './information'
 import WeatherIcon from './WeatherIcon.vue'
 import BackgroundImage from './BackgroundImage.vue'
+import PanelHost from './panels/PanelHost.vue'
+import { defaultPanels } from '../../shared/panels'
 import './kiosk.css'
 
 const { snapshot, connection } = useDisplay()
@@ -41,19 +43,10 @@ const weatherState = computed(() => snapshot.value?.states.find(state => state.t
 const weather = computed(() => weatherState.value?.weather)
 const states = computed(() => snapshot.value?.states.filter(state => state.type !== 'weather') ?? [])
 const entries = computed(() => states.value.flatMap(source => source.items.map(item => ({ ...item, source }))))
-const page = ref(0)
-const pageCount = computed(() => Math.max(1, Math.ceil(entries.value.length / 4)))
-const currentPage = computed(() => page.value % pageCount.value)
-const visibleEntries = computed(() => entries.value.slice(currentPage.value * 4, currentPage.value * 4 + 4))
+const panels = computed(() => (snapshot.value?.config.panels ?? defaultPanels()).filter(panel => panel.enabled))
+const panelContext = computed(() => ({ states: snapshot.value?.states ?? [], timezone: timezone.value, rotationSeconds: snapshot.value?.config.rotationSeconds ?? 12 }))
 const ticker = computed(() => entries.value.map(item => `${item.source.name}：${item.title}`).join('　　 /　　 '))
 const emptyMessage = computed(() => informationMessage(states.value))
-let rotation: ReturnType<typeof setInterval>
-watch(() => snapshot.value?.config.rotationSeconds ?? 12, seconds => {
-  clearInterval(rotation)
-  rotation = setInterval(() => { page.value++ }, seconds * 1000)
-}, { immediate: true })
-onUnmounted(() => clearInterval(rotation))
-
 function weatherDescription(code?: number) {
   if (code === undefined) return ''
   if (code === 0) return '快晴'
@@ -98,16 +91,11 @@ function shortTime(value: string | null | undefined) {
           <div class="weather-credit"><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">気象データ</a></div>
         </section>
       </aside>
-      <section class="updates-panel" aria-label="お知らせ">
-        <div class="updates-heading"><h1>お知らせ</h1><span v-if="entries.length">{{ entries.length }}件<span v-if="pageCount > 1" class="page-count">{{ currentPage + 1 }} / {{ pageCount }}</span></span></div>
-        <div v-if="visibleEntries.length" class="news-grid">
-          <article v-for="item in visibleEntries" :key="`${item.source.id}-${item.id}`" class="news-card">
-            <div class="source-name">{{ item.source.name }}</div>
-            <h2>{{ item.title }}</h2><p v-if="item.body" class="news-description">{{ item.body }}</p>
-            <div class="news-card-bottom"><span>{{ item.source.status === 'stale' ? '前回取得データ' : `${shortTime(item.source.updatedAt)} 更新` }}</span><a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer">詳細</a></div>
-          </article>
+      <section class="updates-panel" aria-label="パネル">
+        <div v-if="panels.length" class="panel-grid">
+          <PanelHost v-for="panel in panels" :key="panel.id" :panel="panel" :context="panelContext" />
         </div>
-        <div v-else class="kiosk-empty" role="status">{{ emptyMessage }}</div>
+        <div v-else class="kiosk-empty" role="status">情報はありません</div>
       </section>
     </main>
     <footer class="kiosk-ticker" aria-label="ニュース">

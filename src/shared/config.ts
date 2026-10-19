@@ -1,5 +1,7 @@
 import { z } from 'zod'
 import { isBackgroundImageUrl } from './background'
+import { defaultPanels } from './panels'
+import { panelsSchema } from './panel-schema'
 
 export const httpUrl = z.string().max(2048).refine(value => {
   try {
@@ -42,6 +44,7 @@ export const configSchema = z.object({
     try { new Intl.DateTimeFormat('ja-JP', { timeZone: value }); return true } catch { return false }
   }, '有効なタイムゾーンを指定してください'),
   rotationSeconds: z.number().int().min(5).max(120),
+  panels: panelsSchema.default(defaultPanels),
   weather: z.object({
     enabled: z.boolean(),
     city: z.string().trim().min(1).max(100),
@@ -58,7 +61,7 @@ export type WeatherConfig = Config['weather']
 
 export function createDefaultConfig(): Config {
   return {
-    schemaVersion: 1, revision: 0, theme: 'dark', backgroundImageUrl: '', title: 'サイネージ', timezone: 'Asia/Tokyo', rotationSeconds: 12,
+    schemaVersion: 1, revision: 0, theme: 'dark', backgroundImageUrl: '', title: 'サイネージ', timezone: 'Asia/Tokyo', rotationSeconds: 12, panels: defaultPanels(),
     weather: { enabled: true, city: '高松', latitude: 34.3401, longitude: 134.0434, intervalSeconds: 600 },
     sources: [],
   }

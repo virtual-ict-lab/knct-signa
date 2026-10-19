@@ -4,11 +4,12 @@ import type { Config, DataSource } from '../../shared/config'
 import ThemeSwitch from '../shared/ThemeSwitch.vue'
 import { useDisplay } from '../shared/use-display'
 import SourceEditor from './SourceEditor.vue'
+import PanelEditor from './PanelEditor.vue'
 import { createSourceId, formatTime } from './management-utils'
 import './manage.css'
 
 const { snapshot, connection } = useDisplay()
-const tab = ref<'general' | 'sources' | 'status'>('general')
+const tab = ref<'general' | 'panels' | 'sources' | 'status'>('general')
 const draft = ref<Config | null>(null)
 const baseline = ref('')
 const headers = ref<Record<string, string>>({})
@@ -18,7 +19,7 @@ const savedAt = ref<string | null>(null)
 let noticeTimer: ReturnType<typeof setTimeout>
 const form = ref<HTMLFormElement | null>(null)
 const dirty = computed(() => !!draft.value && (JSON.stringify(draft.value) !== baseline.value || draft.value.sources.some(source => source.type === 'json' && (headers.value[source.id] ?? '{}') !== JSON.stringify(source.headers, null, 2))))
-const headings = { general: '一般設定', sources: 'データソース', status: '取得状況' }
+const headings = { general: '一般設定', panels: 'パネル', sources: 'データソース', status: '取得状況' }
 const heading = computed(() => headings[tab.value])
 watch(() => draft.value?.theme ?? snapshot.value?.config.theme ?? 'dark', value => { document.documentElement.dataset.theme = value }, { immediate: true })
 const enabledCount = computed(() => draft.value?.sources.filter(source => source.enabled).length ?? 0)
@@ -103,6 +104,7 @@ onUnmounted(() => { clearTimeout(noticeTimer); window.removeEventListener('befor
       <ThemeSwitch v-if="draft" v-model="draft.theme" :disabled="saving || loading" />
       <nav aria-label="管理メニュー">
         <button type="button" :class="{ selected: tab === 'general' }" @click="tab = 'general'">一般設定</button>
+        <button type="button" :class="{ selected: tab === 'panels' }" @click="tab = 'panels'">パネル</button>
         <button type="button" :class="{ selected: tab === 'sources' }" @click="tab = 'sources'">データソース<span>{{ draft?.sources.length ?? 0 }}</span></button>
         <button type="button" :class="{ selected: tab === 'status' }" @click="tab = 'status'">取得状況</button>
       </nav>
@@ -144,6 +146,7 @@ onUnmounted(() => { clearTimeout(noticeTimer); window.removeEventListener('befor
                 </div></div>
               </section>
             </template>
+            <template v-if="tab === 'panels'"><PanelEditor v-model="draft.panels" /></template>
             <template v-if="tab === 'sources'">
               <div class="sources-toolbar"><h3>登録数 {{ draft.sources.length }} / 32</h3><div class="source-add-actions"><button type="button" class="secondary-button" :disabled="draft.sources.length >= 32" @click="addSource('rss')">RSS追加</button><button type="button" class="dark-button" :disabled="draft.sources.length >= 32" @click="addSource('json')">JSON API追加</button></div></div>
               <div v-if="!draft.sources.length" class="manage-empty">情報はありません</div>

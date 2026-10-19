@@ -1,0 +1,11 @@
+{
+  "id": "image",
+  "name": "画像",
+  "fields": [
+    { "key": "url", "label": "画像URL", "type": "image", "default": "" },
+    { "key": "fit", "label": "表示方法", "type": "select", "default": "contain", "options": [
+      { "value": "contain", "label": "全体を表示" },
+      { "value": "cover", "label": "領域に合わせて切り抜き" }
+    ] }
+  ]
+}

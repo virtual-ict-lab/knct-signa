@@ -1,5 +1,6 @@
 import { afterEach, expect, test } from 'bun:test'
 import { fixture, authorization } from './helpers'
+import { createPanel } from '../src/shared/panels'
 import type { DisplaySnapshot } from '../src/shared/display'
 
 const cleanups: (() => Promise<void>)[] = []
@@ -21,10 +22,12 @@ test('pushes the initial state, saved configuration and a fresh snapshot after r
   const first = connect(app.url)
   await until(() => first.messages.length > 0)
   expect(first.messages[0]?.config.title).toBe('サイネージ')
-  const response = await fetch(new URL('/api/manage/config', app.url), { method: 'PUT', headers: { Authorization: authorization, 'Content-Type': 'application/json' }, body: JSON.stringify({ ...app.store.get(), title: '即時反映', backgroundImageUrl: '/assets/background.jpg' }) })
+  const panels = [createPanel('dorm-meals')]
+  const response = await fetch(new URL('/api/manage/config', app.url), { method: 'PUT', headers: { Authorization: authorization, 'Content-Type': 'application/json' }, body: JSON.stringify({ ...app.store.get(), title: '即時反映', backgroundImageUrl: '/assets/background.jpg', panels }) })
   expect(response.status).toBe(200)
   await until(() => first.messages.some(message => message.config.title === '即時反映'))
   expect(first.messages.find(message => message.config.title === '即時反映')?.config.backgroundImageUrl).toBe('/assets/background.jpg')
+  expect(first.messages.find(message => message.config.title === '即時反映')?.config.panels).toEqual(panels)
   first.socket.close()
   const second = connect(app.url)
   await until(() => second.messages.length > 0)

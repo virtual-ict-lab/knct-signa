@@ -19,9 +19,9 @@ export interface DisplaySnapshot {
   instanceId: string
   sequence: number
   revision: number
-  config: { title: string; theme: Config['theme']; backgroundImageUrl: string; timezone: string; rotationSeconds: number; city: string; weatherEnabled: boolean }
+  config: { title: string; theme: Config['theme']; backgroundImageUrl: string; timezone: string; rotationSeconds: number; city: string; weatherEnabled: boolean; panels: Config['panels'] }
   states: SourceState[]
 }
 export function publicConfig(config: Config): DisplaySnapshot['config'] {
-  return { title: config.title, theme: config.theme, backgroundImageUrl: config.backgroundImageUrl, timezone: config.timezone, rotationSeconds: config.rotationSeconds, city: config.weather.city, weatherEnabled: config.weather.enabled }
+  return { title: config.title, theme: config.theme, backgroundImageUrl: config.backgroundImageUrl, timezone: config.timezone, rotationSeconds: config.rotationSeconds, city: config.weather.city, weatherEnabled: config.weather.enabled, panels: config.panels }
 }

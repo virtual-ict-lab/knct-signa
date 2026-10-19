@@ -1,0 +1,8 @@
+{
+  "id": "dorm-meals",
+  "name": "寮食",
+  "fields": [
+    { "key": "url", "label": "献立API URL", "type": "url", "required": true, "default": "https://virtual-ict-lab.github.io/knct-ryoshoku-api/kondate.json" },
+    { "key": "intervalSeconds", "label": "取得間隔（秒）", "type": "number", "default": 600, "min": 60, "max": 86400, "step": 1 }
+  ]
+}

@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun scripts/dev.ts",
+    "dev": "bun scripts/generate-panels.ts && bun scripts/dev.ts",
     "start": "bun src/server/index.ts",
-    "build": "bun --bun vite build",
-    "typecheck": "bun scripts/typecheck.ts",
-    "test": "bun test"
+    "build": "bun scripts/generate-panels.ts && bun --bun vite build",
+    "typecheck": "bun scripts/generate-panels.ts && bun scripts/typecheck.ts",
+    "test": "bun scripts/generate-panels.ts && bun test"
   },
   "engines": {
     "bun": ">=1.3.0"

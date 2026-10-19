@@ -4,7 +4,7 @@ import type { DisplaySnapshot } from '../src/shared/display'
 
 const snapshot = (instanceId: string, sequence: number, title: string): DisplaySnapshot => ({
   type: 'snapshot', instanceId, sequence, revision: sequence,
-  config: { title, timezone: 'Asia/Tokyo', rotationSeconds: 12, city: '高松', weatherEnabled: true }, states: [],
+  config: { title, theme: 'dark', timezone: 'Asia/Tokyo', rotationSeconds: 12, city: '高松', weatherEnabled: true }, states: [],
 })
 test('keeps the latest state when an older initial HTTP response arrives after WebSocket', () => {
   const current = snapshot('server-one', 5, '最新設定')

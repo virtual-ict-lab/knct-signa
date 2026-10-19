@@ -20,7 +20,7 @@ test('pushes the initial state, saved configuration and a fresh snapshot after r
   const app = await fixture(); cleanups.push(app.cleanup)
   const first = connect(app.url)
   await until(() => first.messages.length > 0)
-  expect(first.messages[0]?.config.title).toBe('knct-signa')
+  expect(first.messages[0]?.config.title).toBe('サイネージ')
   const response = await fetch(new URL('/api/manage/config', app.url), { method: 'PUT', headers: { Authorization: authorization, 'Content-Type': 'application/json' }, body: JSON.stringify({ ...app.store.get(), title: '即時反映' }) })
   expect(response.status).toBe(200)
   await until(() => first.messages.some(message => message.config.title === '即時反映'))

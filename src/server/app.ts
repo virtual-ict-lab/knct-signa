@@ -18,7 +18,7 @@ export function sameOrigin(request: Request): boolean {
 
 export function createApp({ store, scheduler, hub, credentials, distDir }: Dependencies) {
   const app = new Hono()
-  const auth = basicAuth({ ...credentials, realm: 'knct-signa management' })
+  const auth = basicAuth({ ...credentials, realm: 'Management' })
   app.use('/manage', auth)
   app.use('/manage/*', auth)
   app.use('/api/manage/*', auth)
@@ -39,7 +39,7 @@ export function createApp({ store, scheduler, hub, credentials, distDir }: Depen
 
   const page = async (name: 'kiosk' | 'manage') => {
     const file = Bun.file(join(distDir, name, 'index.html'))
-    if (!await file.exists()) return new Response('画面の準備ができていません。サーバーの起動手順を確認してください。', { status: 503 })
+    if (!await file.exists()) return new Response('画面の読込失敗', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
     return new Response(file, { headers: { 'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8' } })
   }
   app.get('/', c => c.redirect('/kiosk'))
@@ -47,10 +47,6 @@ export function createApp({ store, scheduler, hub, credentials, distDir }: Depen
   app.get('/kiosk/', () => page('kiosk'))
   app.get('/manage', () => page('manage'))
   app.get('/manage/*', () => page('manage'))
-  app.get('/favicon.svg', async c => {
-    const file = Bun.file(join(distDir, 'favicon.svg'))
-    return await file.exists() ? new Response(file) : c.notFound()
-  })
   app.get('/assets/*', async c => {
     const name = c.req.path.slice('/assets/'.length)
     if (!/^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/.test(name)) return c.notFound()
@@ -62,7 +58,7 @@ export function createApp({ store, scheduler, hub, credentials, distDir }: Depen
     if (error instanceof ConflictError) return c.json({ error: error.message }, 409)
     if (error instanceof z.ZodError) return c.json({ error: '入力内容を確認してください', issues: error.issues.map(issue => `${issue.path.join('.')}: ${issue.message}`) }, 400)
     if (error instanceof SyntaxError) return c.json({ error: 'JSONの形式を確認してください' }, 400)
-    return c.json({ error: '処理に失敗しました。保存先やサーバーの状態を確認してください。' }, 500)
+    return c.json({ error: '処理失敗' }, 500)
   })
   return app
 }

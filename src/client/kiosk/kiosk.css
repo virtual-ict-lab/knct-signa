@@ -8,7 +8,7 @@
 .kiosk-main { display: grid; grid-template-columns: minmax(280px, .8fr) minmax(0, 1.75fr); gap: 42px; padding: 86px 36px 34px; width: 100%; min-height: 0; }
 .kiosk-sidebar { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
 .clock-panel { container-type: inline-size; padding: 0 0 12px; }
-.clock-time { font-size: clamp(36px, 23cqw, 160px); font-weight: 500; line-height: 1.2; letter-spacing: -.05em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.clock-time { font-size: clamp(36px, 23cqw, 160px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .clock-date { font-size: clamp(16px, 1.5vw, 27px); line-height: 1.7; margin-top: 20px; }
 .clock-location { margin-top: 14px; color: var(--muted); font-size: clamp(14px, 1.1vw, 22px); }
 .connection-error { font-size: 14px; color: var(--muted); margin: 14px 0 0; }

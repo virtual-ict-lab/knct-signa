@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useDisplay } from '../shared/use-display'
 import { useClock } from '../shared/use-clock'
 import ThemeSwitch from '../shared/ThemeSwitch.vue'
@@ -11,6 +11,21 @@ import './kiosk.css'
 const { snapshot, connection } = useDisplay()
 const timezone = computed(() => snapshot.value?.config.timezone ?? 'Asia/Tokyo')
 const { time, date } = useClock(timezone)
+const fullscreen = ref(false)
+const fullscreenError = ref('')
+function updateFullscreen() { fullscreen.value = !!document.fullscreenElement }
+async function toggleFullscreen() {
+  fullscreenError.value = ''
+  try {
+    if (document.fullscreenElement) await document.exitFullscreen()
+    else await document.documentElement.requestFullscreen()
+  } catch { fullscreenError.value = '全画面切替失敗' }
+}
+onMounted(() => {
+  updateFullscreen()
+  document.addEventListener('fullscreenchange', updateFullscreen)
+})
+onUnmounted(() => document.removeEventListener('fullscreenchange', updateFullscreen))
 const preference = ref<ThemePreference | null>(null)
 try { preference.value = parseThemePreference(localStorage.getItem('display.theme')) } catch { /* ストレージが使えない場合は画面内だけで保持 */ }
 const theme = computed({
@@ -57,7 +72,11 @@ function shortTime(value: string | null | undefined) {
 
 <template>
   <div class="kiosk-shell">
-    <div class="kiosk-controls"><ThemeSwitch v-model="theme" /></div>
+    <div class="kiosk-controls">
+      <ThemeSwitch v-model="theme" />
+      <button type="button" class="fullscreen-button" :aria-pressed="fullscreen" @click="toggleFullscreen">{{ fullscreen ? '全画面解除' : '全画面' }}</button>
+      <span v-if="fullscreenError" class="fullscreen-error" role="status">{{ fullscreenError }}</span>
+    </div>
     <main class="kiosk-main">
       <aside class="kiosk-sidebar">
         <section class="clock-panel" aria-label="現在時刻">

@@ -4,6 +4,7 @@ import type { Config, DataSource } from '../../shared/config'
 import Brand from '../shared/Brand.vue'
 import { useDisplay } from '../shared/use-display'
 import SourceEditor from './SourceEditor.vue'
+import { createSourceId, formatTime } from './management-utils'
 import './manage.css'
 
 const { snapshot, connection } = useDisplay()
@@ -65,7 +66,7 @@ async function save() {
 }
 function addSource(type: DataSource['type']) {
   if (!draft.value || draft.value.sources.length >= 32) return
-  const base = { id: crypto.randomUUID(), type, name: '', url: '', enabled: true, intervalSeconds: 300 }
+  const base = { id: createSourceId(), type, name: '', url: '', enabled: true, intervalSeconds: 300 }
   const source: DataSource = type === 'rss' ? { ...base, type: 'rss' } : { ...base, type: 'json', itemsPath: '', titlePath: 'title', bodyPath: 'description', linkPath: 'url', headers: {} }
   draft.value.sources.push(source)
   headers.value[source.id] = '{}'
@@ -84,7 +85,7 @@ function moveSource(index: number, direction: number) {
   ;[sources[index], sources[target]] = [sources[target]!, sources[index]!]
 }
 function time(value: string | null) {
-  return value ? new Intl.DateTimeFormat('ja-JP', { timeZone: draft.value?.timezone ?? 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).format(new Date(value)) : '—'
+  return formatTime(value, draft.value?.timezone ?? 'Asia/Tokyo')
 }
 function beforeUnload(event: BeforeUnloadEvent) { if (dirty.value) { event.preventDefault(); event.returnValue = '' } }
 onMounted(() => { void load(); window.addEventListener('beforeunload', beforeUnload) })

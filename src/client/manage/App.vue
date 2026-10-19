@@ -131,6 +131,7 @@ onUnmounted(() => { clearTimeout(noticeTimer); window.removeEventListener('befor
                   <label class="field">テーマ<select v-model="draft.theme"><option value="dark">ダーク</option><option value="light">ライト</option></select></label>
                   <label class="field">タイムゾーン<input v-model="draft.timezone" required list="timezones" placeholder="Asia/Tokyo" /><datalist id="timezones"><option value="Asia/Tokyo"/><option value="UTC"/></datalist></label>
                   <label class="field">記事の切り替え間隔（秒）<input v-model.number="draft.rotationSeconds" type="number" required min="5" max="120" step="1" /></label>
+                  <label class="field">背景画像URL（空欄で解除）<input v-model="draft.backgroundImageUrl" maxlength="2048" placeholder="https://example.com/background.jpg または /assets/background.jpg" spellcheck="false" /></label>
                 </div></div>
               </section>
               <section class="settings-card">

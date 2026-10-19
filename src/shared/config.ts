@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { isBackgroundImageUrl } from './background'
 
 export const httpUrl = z.string().max(2048).refine(value => {
   try {
@@ -35,6 +36,7 @@ export const configSchema = z.object({
   schemaVersion: z.literal(1),
   revision: z.number().int().nonnegative(),
   theme: z.enum(['dark', 'light']).default('dark'),
+  backgroundImageUrl: z.string().trim().max(2048).refine(isBackgroundImageUrl, '画像URLが不正です').default(''),
   title: z.string().trim().min(1).max(120),
   timezone: z.string().max(100).refine(value => {
     try { new Intl.DateTimeFormat('ja-JP', { timeZone: value }); return true } catch { return false }
@@ -56,7 +58,7 @@ export type WeatherConfig = Config['weather']
 
 export function createDefaultConfig(): Config {
   return {
-    schemaVersion: 1, revision: 0, theme: 'dark', title: 'サイネージ', timezone: 'Asia/Tokyo', rotationSeconds: 12,
+    schemaVersion: 1, revision: 0, theme: 'dark', backgroundImageUrl: '', title: 'サイネージ', timezone: 'Asia/Tokyo', rotationSeconds: 12,
     weather: { enabled: true, city: '高松', latitude: 34.3401, longitude: 134.0434, intervalSeconds: 600 },
     sources: [],
   }

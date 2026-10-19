@@ -6,6 +6,7 @@ import ThemeSwitch from '../shared/ThemeSwitch.vue'
 import { parseThemePreference, resolveTheme, type ThemePreference } from '../shared/theme'
 import { informationMessage } from './information'
 import WeatherIcon from './WeatherIcon.vue'
+import BackgroundImage from './BackgroundImage.vue'
 import './kiosk.css'
 
 const { snapshot, connection } = useDisplay()
@@ -72,6 +73,7 @@ function shortTime(value: string | null | undefined) {
 
 <template>
   <div class="kiosk-shell">
+    <BackgroundImage v-if="snapshot?.config.backgroundImageUrl" :key="snapshot.config.backgroundImageUrl" :url="snapshot.config.backgroundImageUrl" />
     <div class="kiosk-controls">
       <ThemeSwitch v-model="theme" />
       <button type="button" class="fullscreen-button" :aria-pressed="fullscreen" @click="toggleFullscreen">{{ fullscreen ? '全画面解除' : '全画面' }}</button>

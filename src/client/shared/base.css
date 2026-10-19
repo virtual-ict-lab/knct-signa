@@ -1,0 +1,39 @@
+@import '@fontsource-variable/reddit-sans';
+@import '@fontsource-variable/noto-sans-jp';
+* { box-sizing: border-box; }
+:root {
+  font-family: "Reddit Sans Variable", "Reddit Sans", "Noto Sans JP Variable", "Noto Sans JP", sans-serif;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  color-scheme: dark;
+  --background: #262626;
+  --surface: #303030;
+  --surface-raised: #393939;
+  --foreground: #d6d6d6;
+  --muted: #aaaaaa;
+  --border: #505050;
+  color: var(--foreground);
+  background: var(--background);
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+  --background: #e6e6e6;
+  --surface: #ededed;
+  --surface-raised: #dcdcdc;
+  --foreground: #3b3b3b;
+  --muted: #666666;
+  --border: #c2c2c2;
+}
+body { margin: 0; }
+button, input, select, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .5; }
+a { color: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+.eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+.theme-switch { display: inline-flex; width: fit-content; border: 1px solid var(--border); background: var(--background); border-radius: 4px; padding: 3px; gap: 3px; }
+.theme-switch button { border: 0; border-radius: 2px; background: transparent; color: var(--muted); font-size: 12px; padding: 6px 12px; white-space: nowrap; }
+.theme-switch button[aria-pressed='true'] { background: var(--foreground); color: var(--background); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
